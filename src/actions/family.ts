@@ -1,5 +1,5 @@
 import type { db as realDb } from "@/db/client";
-import { parent, kid, type PersonType } from "@/db/schema";
+import { family, parent, kid, type PersonType } from "@/db/schema";
 
 type Db = typeof realDb;
 
@@ -20,4 +20,10 @@ export async function listFamilyMembers(db: Db): Promise<FamilyMember[]> {
     ...parents.map((p) => ({ ...p, type: "parent" as const })),
     ...kids.map((k) => ({ ...k, type: "kid" as const })),
   ];
+}
+
+export async function getFamilyId(db: Db): Promise<string> {
+  const [f] = await db.select({ id: family.id }).from(family).limit(1);
+  if (!f) throw new Error("no family exists yet");
+  return f.id;
 }

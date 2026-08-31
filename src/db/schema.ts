@@ -55,3 +55,13 @@ export const starLedgerEntry = pgTable("star_ledger_entry", {
     .references(() => parent.id),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
+
+export const reward = pgTable("reward", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  familyId: uuid("family_id")
+    .notNull()
+    .references(() => family.id),
+  name: text("name").notNull(),
+  cost: integer("cost").notNull(),
+  archivedAt: timestamp("archived_at", { withTimezone: true }),
+});
