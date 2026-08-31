@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db/client";
-import { getCurrentPerson } from "@/lib/currentPerson";
+import { requireParent } from "@/lib/currentPerson";
 import { awardStars, type StarLedgerEntry } from "./stars";
 
 export type AwardStarsResult =
@@ -13,8 +13,8 @@ export async function awardStarsAction(
   amount: number,
   reason?: string
 ): Promise<AwardStarsResult> {
-  const person = await getCurrentPerson();
-  if (!person || person.personType !== "parent") {
+  const parent = await requireParent();
+  if (!parent) {
     return { success: false, reason: "not_authorized" };
   }
 
@@ -22,7 +22,7 @@ export async function awardStarsAction(
     kidId,
     amount,
     reason,
-    createdByParentId: person.personId,
+    createdByParentId: parent.personId,
   });
 
   return { success: true, entry };

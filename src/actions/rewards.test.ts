@@ -20,6 +20,22 @@ describe("rewards", () => {
     expect(created.archivedAt).toBeNull();
   });
 
+  it("rejects a non-positive cost when creating", async () => {
+    const db = await createTestDb();
+    const familyId = await seedFamilyId(db);
+
+    await expect(createReward(db, { familyId, name: "Free thing", cost: 0 })).rejects.toThrow();
+    await expect(createReward(db, { familyId, name: "Negative", cost: -1 })).rejects.toThrow();
+  });
+
+  it("rejects a non-positive cost when editing", async () => {
+    const db = await createTestDb();
+    const familyId = await seedFamilyId(db);
+    const created = await createReward(db, { familyId, name: "Ice cream", cost: 10 });
+
+    await expect(updateReward(db, created.id, { name: "Ice cream", cost: 0 })).rejects.toThrow();
+  });
+
   it("edits a Reward's name and cost", async () => {
     const db = await createTestDb();
     const familyId = await seedFamilyId(db);

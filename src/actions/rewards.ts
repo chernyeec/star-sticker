@@ -6,10 +6,17 @@ type Db = typeof realDb;
 
 export type Reward = typeof reward.$inferSelect;
 
+function assertPositiveIntegerCost(cost: number) {
+  if (!Number.isInteger(cost) || cost <= 0) {
+    throw new Error("Reward cost must be a positive integer");
+  }
+}
+
 export async function createReward(
   db: Db,
   input: { familyId: string; name: string; cost: number }
 ): Promise<Reward> {
+  assertPositiveIntegerCost(input.cost);
   const [created] = await db.insert(reward).values(input).returning();
   return created;
 }
@@ -19,6 +26,7 @@ export async function updateReward(
   rewardId: string,
   input: { name: string; cost: number }
 ): Promise<Reward> {
+  assertPositiveIntegerCost(input.cost);
   const [updated] = await db
     .update(reward)
     .set(input)

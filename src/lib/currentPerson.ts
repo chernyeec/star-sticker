@@ -8,3 +8,9 @@ export async function getCurrentPerson(): Promise<{ personType: PersonType; pers
   if (!token) return null;
   return resolveSession(db, token);
 }
+
+export async function requireParent(): Promise<{ personId: string } | null> {
+  const person = await getCurrentPerson();
+  if (!person || person.personType !== "parent") return null;
+  return { personId: person.personId };
+}

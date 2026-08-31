@@ -1,18 +1,13 @@
 "use server";
 
 import { db } from "@/db/client";
-import { getCurrentPerson } from "@/lib/currentPerson";
+import { requireParent } from "@/lib/currentPerson";
 import { getFamilyId } from "./family";
 import { createReward, updateReward, archiveReward, type Reward } from "./rewards";
 
 export type RewardActionResult =
   | { success: true; reward: Reward }
   | { success: false; reason: "not_authorized" };
-
-async function requireParent() {
-  const person = await getCurrentPerson();
-  return person && person.personType === "parent";
-}
 
 export async function createRewardAction(name: string, cost: number): Promise<RewardActionResult> {
   if (!(await requireParent())) {
