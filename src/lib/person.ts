@@ -1,9 +1,9 @@
 import { eq } from "drizzle-orm";
-import { parent, kid } from "@/db/schema";
+import { parent, kid, type PersonType } from "@/db/schema";
 import type { db as DbClient } from "@/db/client";
 
 type Db = typeof DbClient;
-export type PersonType = "parent" | "kid";
+export type { PersonType };
 
 function tableFor(personType: PersonType) {
   return personType === "parent" ? parent : kid;

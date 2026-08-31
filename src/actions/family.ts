@@ -1,11 +1,11 @@
 import type { db as realDb } from "@/db/client";
-import { parent, kid } from "@/db/schema";
+import { parent, kid, type PersonType } from "@/db/schema";
 
 type Db = typeof realDb;
 
 export type FamilyMember = {
   id: string;
-  type: "parent" | "kid";
+  type: PersonType;
   name: string;
   avatar: string | null;
 };

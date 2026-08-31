@@ -1,5 +1,10 @@
 import { cookies } from "next/headers";
 
+// The cookie holds a high-entropy opaque token (see session.ts), verified
+// server-side against a hash stored in the `session` table — not an
+// HMAC/JWT-signed value. This gives the same tamper-resistance as
+// signing, plus instant revocation (delete the row) with no signing-key
+// management.
 const SESSION_COOKIE = "star_sticker_session";
 
 export async function setSessionCookie(token: string, expiresAt: Date) {

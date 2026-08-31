@@ -30,6 +30,7 @@ export const kid = pgTable("kid", {
 });
 
 export const personTypeEnum = pgEnum("person_type", ["parent", "kid"]);
+export type PersonType = (typeof personTypeEnum.enumValues)[number];
 
 export const session = pgTable("session", {
   id: uuid("id").primaryKey().defaultRandom(),

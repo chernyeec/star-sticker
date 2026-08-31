@@ -15,8 +15,7 @@ export type SetupResult =
   | { success: false; reason: "family_exists" };
 
 export async function setupFamily(db: Db, input: SetupInput): Promise<SetupResult> {
-  const existing = await db.select().from(family).limit(1);
-  if (existing.length > 0) {
+  if (await familyExists(db)) {
     return { success: false, reason: "family_exists" };
   }
 

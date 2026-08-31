@@ -1,9 +1,8 @@
 import { randomBytes, createHash } from "node:crypto";
 import { eq, and, gt } from "drizzle-orm";
-import { session, type personTypeEnum } from "@/db/schema";
+import { session, type PersonType } from "@/db/schema";
 import type { db as DbClient } from "@/db/client";
 
-type PersonType = (typeof personTypeEnum.enumValues)[number];
 type Db = typeof DbClient;
 
 const DEFAULT_SESSION_LIFETIME_MS = 90 * 24 * 60 * 60 * 1000; // 90 days
@@ -45,4 +44,8 @@ export async function resolveSession(
   if (!row) return null;
 
   return { personType: row.personType, personId: row.personId };
+}
+
+export async function revokeSession(db: Db, token: string): Promise<void> {
+  await db.delete(session).where(eq(session.tokenHash, hashToken(token)));
 }

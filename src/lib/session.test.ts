@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { createSession, resolveSession } from "./session";
+import { createSession, resolveSession, revokeSession } from "./session";
 import { createTestDb } from "@/db/testDb";
 import { family, parent } from "@/db/schema";
 import { hashPin } from "./pin";
@@ -49,5 +49,15 @@ describe("session", () => {
 
     expect(rows).toHaveLength(1);
     expect(rows[0].tokenHash).not.toBe(token);
+  });
+
+  it("no longer resolves a session once it has been revoked (logged out)", async () => {
+    const db = await createTestDb();
+    const p = await seedParent(db);
+
+    const { token } = await createSession(db, "parent", p.id);
+    await revokeSession(db, token);
+
+    expect(await resolveSession(db, token)).toBeNull();
   });
 });
