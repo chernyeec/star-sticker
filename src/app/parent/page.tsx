@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { getCurrentPerson } from "@/lib/currentPerson";
 import { db } from "@/db/client";
 import { listFamilyMembers } from "@/actions/family";
@@ -30,6 +31,9 @@ export default async function ParentDashboard() {
       <AwardStarsForm kids={kids} />
       <RewardsManager rewards={rewards} />
       <PendingRedemptions redemptions={pendingRedemptions} kids={kids} />
+      <p>
+        <Link href="/parent/manage">Manage family</Link>
+      </p>
       <LogoutButton />
     </div>
   );

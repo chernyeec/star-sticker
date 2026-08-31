@@ -36,3 +36,13 @@ export async function setFailedAttempts(
 export async function resetFailedAttempts(db: Db, personType: PersonType, personId: string) {
   await setFailedAttempts(db, personType, personId, 0, null);
 }
+
+export async function setPinHash(
+  db: Db,
+  personType: PersonType,
+  personId: string,
+  pinHash: string
+) {
+  const table = tableFor(personType);
+  await db.update(table).set({ pinHash }).where(eq(table.id, personId));
+}
