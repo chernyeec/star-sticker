@@ -29,8 +29,11 @@ export default function PendingRedemptions({
   }
 
   async function handleReject(redemptionId: string) {
+    const reason = window.prompt("Reason (optional) — Cancel to back out without rejecting:");
+    if (reason === null) return;
+
     setBusyId(redemptionId);
-    await rejectRedemptionAction(redemptionId);
+    await rejectRedemptionAction(redemptionId, reason || undefined);
     setBusyId(null);
     router.refresh();
   }
