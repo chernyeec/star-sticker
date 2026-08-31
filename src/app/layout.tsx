@@ -16,10 +16,6 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Star Sticker",
   description: "Give and take away star stickers as rewards and consequences.",
-  icons: {
-    icon: "/icon.svg",
-    apple: "/icon.svg",
-  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
