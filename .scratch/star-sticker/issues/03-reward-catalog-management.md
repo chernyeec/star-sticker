@@ -6,15 +6,23 @@ no longer offered, without breaking anything that referenced them.
 
 **Blocked by:** 01 — Family setup, and PIN login for Parents and Kids
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] `reward` schema (family_id, name, cost as a positive integer,
+- [x] `reward` schema (family_id, name, cost as a positive integer,
       nullable archived_at)
-- [ ] Any logged-in Parent can create a Reward (name + cost)
-- [ ] Any logged-in Parent can edit a Reward's name or cost
-- [ ] Any logged-in Parent can archive a Reward (sets archived_at; not
+- [x] Any logged-in Parent can create a Reward (name + cost)
+- [x] Any logged-in Parent can edit a Reward's name or cost
+- [x] Any logged-in Parent can archive a Reward (sets archived_at; not
       a hard delete)
-- [ ] Archived Rewards are excluded from the active catalog listing
-- [ ] The catalog is shared across the whole Family, not per-Kid
-- [ ] Server Action-level tests cover: create/edit/archive a Reward,
+- [x] Archived Rewards are excluded from the active catalog listing
+- [x] The catalog is shared across the whole Family, not per-Kid
+- [x] Server Action-level tests cover: create/edit/archive a Reward,
       and the active-listing query excludes archived Rewards
+
+## Notes
+
+Positive-integer cost is enforced in `rewards.ts`, not just the UI's
+`min="1"` — calling the action directly with a zero/negative cost is
+rejected. Both `stars.action.ts` and `rewards.action.ts` now share one
+`requireParent()` helper (`src/lib/currentPerson.ts`) rather than each
+having its own auth-check idiom.
