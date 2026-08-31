@@ -45,6 +45,15 @@ describe("stars", () => {
     expect(entry.reason).toBeNull();
   });
 
+  it("rejects a non-integer amount", async () => {
+    const db = await createTestDb();
+    const { parentId, kidId } = await seedFamily(db);
+
+    await expect(
+      awardStars(db, { kidId, amount: 1.5, createdByParentId: parentId })
+    ).rejects.toThrow();
+  });
+
   it("sums a Kid's balance across entries, including going negative", async () => {
     const db = await createTestDb();
     const { parentId, kidId } = await seedFamily(db);

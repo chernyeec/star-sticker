@@ -53,6 +53,7 @@ export default function AwardStarsForm({ kids }: { kids: FamilyMember[] }) {
         Stars (negative to deduct)
         <input
           type="number"
+          step="1"
           required
           value={amount}
           onChange={(e) => setAmount(e.target.value)}

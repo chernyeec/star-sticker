@@ -1,4 +1,4 @@
-import { pgTable, text, integer, timestamp, uuid, pgEnum } from "drizzle-orm/pg-core";
+import { pgTable, text, integer, timestamp, uuid, pgEnum, bigserial } from "drizzle-orm/pg-core";
 
 export const family = pgTable("family", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -42,6 +42,9 @@ export const session = pgTable("session", {
 
 export const starLedgerEntry = pgTable("star_ledger_entry", {
   id: uuid("id").primaryKey().defaultRandom(),
+  // Monotonic insertion order, for stable history ordering — wall-clock
+  // createdAt can tie between two rapid inserts.
+  sequence: bigserial("sequence", { mode: "number" }).notNull(),
   kidId: uuid("kid_id")
     .notNull()
     .references(() => kid.id),

@@ -28,7 +28,7 @@ export async function getKidHistory(db: Db, kidId: string): Promise<StarLedgerEn
     .select()
     .from(starLedgerEntry)
     .where(eq(starLedgerEntry.kidId, kidId))
-    .orderBy(desc(starLedgerEntry.createdAt));
+    .orderBy(desc(starLedgerEntry.sequence));
 }
 
 export async function getKidBalance(db: Db, kidId: string): Promise<number> {

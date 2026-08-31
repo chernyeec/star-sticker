@@ -1,0 +1,1 @@
+ALTER TABLE "star_ledger_entry" ADD COLUMN "sequence" bigserial NOT NULL;
