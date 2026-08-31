@@ -39,3 +39,16 @@ export const session = pgTable("session", {
   tokenHash: text("token_hash").notNull(),
   expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
 });
+
+export const starLedgerEntry = pgTable("star_ledger_entry", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  kidId: uuid("kid_id")
+    .notNull()
+    .references(() => kid.id),
+  amount: integer("amount").notNull(),
+  reason: text("reason"),
+  createdByParentId: uuid("created_by_parent_id")
+    .notNull()
+    .references(() => parent.id),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});

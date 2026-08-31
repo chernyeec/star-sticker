@@ -15,6 +15,13 @@
       "when": 1788181700023,
       "tag": "0001_equal_blue_shield",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1788184674428,
+      "tag": "0002_open_spitfire",
+      "breakpoints": true
     }
   ]
 }
