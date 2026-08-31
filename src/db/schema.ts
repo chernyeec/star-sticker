@@ -65,3 +65,28 @@ export const reward = pgTable("reward", {
   cost: integer("cost").notNull(),
   archivedAt: timestamp("archived_at", { withTimezone: true }),
 });
+
+export const redemptionStatusEnum = pgEnum("redemption_status", [
+  "pending",
+  "approved",
+  "rejected",
+  "cancelled",
+]);
+export type RedemptionStatus = (typeof redemptionStatusEnum.enumValues)[number];
+
+export const redemption = pgTable("redemption", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  // Monotonic insertion order, for stable history ordering — see the
+  // same field on star_ledger_entry for why.
+  sequence: bigserial("sequence", { mode: "number" }).notNull(),
+  kidId: uuid("kid_id")
+    .notNull()
+    .references(() => kid.id),
+  rewardNameSnapshot: text("reward_name_snapshot").notNull(),
+  rewardCostSnapshot: integer("reward_cost_snapshot").notNull(),
+  status: redemptionStatusEnum("status").notNull().default("pending"),
+  requestedAt: timestamp("requested_at", { withTimezone: true }).notNull().defaultNow(),
+  resolvedAt: timestamp("resolved_at", { withTimezone: true }),
+  resolvedByParentId: uuid("resolved_by_parent_id").references(() => parent.id),
+  rejectReason: text("reject_reason"),
+});

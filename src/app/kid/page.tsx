@@ -2,7 +2,10 @@ import { redirect } from "next/navigation";
 import { getCurrentPerson } from "@/lib/currentPerson";
 import { db } from "@/db/client";
 import { getKidHistory } from "@/actions/stars";
+import { listActiveRewards } from "@/actions/rewards";
+import { listKidRedemptions } from "@/actions/redemptions";
 import LogoutButton from "../LogoutButton";
+import RedeemPanel from "./RedeemPanel";
 
 export const dynamic = "force-dynamic";
 
@@ -12,7 +15,11 @@ export default async function KidView() {
     redirect("/login");
   }
 
-  const history = await getKidHistory(db, person.personId);
+  const [history, rewards, redemptions] = await Promise.all([
+    getKidHistory(db, person.personId),
+    listActiveRewards(db),
+    listKidRedemptions(db, person.personId),
+  ]);
   const balance = history.reduce((sum, entry) => sum + entry.amount, 0);
 
   return (
@@ -35,6 +42,8 @@ export default async function KidView() {
           ))}
         </ul>
       )}
+
+      <RedeemPanel rewards={rewards} balance={balance} redemptions={redemptions} />
 
       <LogoutButton />
     </div>

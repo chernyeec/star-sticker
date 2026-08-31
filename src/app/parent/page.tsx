@@ -3,9 +3,11 @@ import { getCurrentPerson } from "@/lib/currentPerson";
 import { db } from "@/db/client";
 import { listFamilyMembers } from "@/actions/family";
 import { listActiveRewards } from "@/actions/rewards";
+import { listPendingRedemptions } from "@/actions/redemptions";
 import LogoutButton from "../LogoutButton";
 import AwardStarsForm from "./AwardStarsForm";
 import RewardsManager from "./RewardsManager";
+import PendingRedemptions from "./PendingRedemptions";
 
 export const dynamic = "force-dynamic";
 
@@ -15,15 +17,19 @@ export default async function ParentDashboard() {
     redirect("/login");
   }
 
-  const [members, rewards] = await Promise.all([listFamilyMembers(db), listActiveRewards(db)]);
+  const [members, rewards, pendingRedemptions] = await Promise.all([
+    listFamilyMembers(db),
+    listActiveRewards(db),
+    listPendingRedemptions(db),
+  ]);
   const kids = members.filter((m) => m.type === "kid");
 
   return (
     <div className="container">
       <h1>Parent dashboard</h1>
-      <p>Approve redemptions here soon.</p>
       <AwardStarsForm kids={kids} />
       <RewardsManager rewards={rewards} />
+      <PendingRedemptions redemptions={pendingRedemptions} kids={kids} />
       <LogoutButton />
     </div>
   );

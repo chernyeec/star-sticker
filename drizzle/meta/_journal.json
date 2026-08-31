@@ -36,6 +36,13 @@
       "when": 1788186273608,
       "tag": "0004_brainy_tag",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1788186912942,
+      "tag": "0005_optimal_namor",
+      "breakpoints": true
     }
   ]
 }
