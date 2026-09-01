@@ -7,8 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "Give and take away star stickers as rewards and consequences.",
     start_url: "/",
     display: "standalone",
-    background_color: "#ffffff",
-    theme_color: "#171717",
+    background_color: "#81d4fa",
+    theme_color: "#ffb300",
     icons: [
       { src: "/icon", sizes: "512x512", type: "image/png", purpose: "any" },
       { src: "/icon", sizes: "512x512", type: "image/png", purpose: "maskable" },

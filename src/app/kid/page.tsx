@@ -24,8 +24,8 @@ export default async function KidView() {
 
   return (
     <div className="container">
-      <h1>Your stars</h1>
-      <p style={{ fontSize: "2rem" }}>⭐ {balance}</p>
+      <h1>⭐ Your stars ⭐</h1>
+      <p className="star-balance">{balance}</p>
 
       <h2>History</h2>
       {history.length === 0 ? (

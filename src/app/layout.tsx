@@ -1,15 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Fredoka } from "next/font/google";
 import "./globals.css";
 import ServiceWorkerRegistration from "./ServiceWorkerRegistration";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const fredoka = Fredoka({
+  variable: "--font-fredoka",
   subsets: ["latin"],
 });
 
@@ -26,12 +21,12 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#171717",
+  themeColor: "#ffb300",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html lang="en" className={fredoka.variable}>
       <body>
         <ServiceWorkerRegistration />
         {children}
