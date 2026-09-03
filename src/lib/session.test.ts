@@ -2,14 +2,10 @@ import { describe, it, expect } from "vitest";
 import { createSession, resolveSession, revokeSession } from "./session";
 import { createTestDb } from "@/db/testDb";
 import { family, parent } from "@/db/schema";
-import { hashPin } from "./pin";
 
 async function seedParent(db: Awaited<ReturnType<typeof createTestDb>>) {
   const [f] = await db.insert(family).values({ name: "The Smiths" }).returning();
-  const [p] = await db
-    .insert(parent)
-    .values({ familyId: f.id, name: "Mom", pinHash: await hashPin("1234") })
-    .returning();
+  const [p] = await db.insert(parent).values({ familyId: f.id, name: "Mom" }).returning();
   return p;
 }
 

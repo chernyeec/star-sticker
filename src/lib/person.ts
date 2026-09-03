@@ -18,31 +18,3 @@ export async function getPerson(db: Db, personType: PersonType, personId: string
     .limit(1);
   return rows[0] ?? null;
 }
-
-export async function setFailedAttempts(
-  db: Db,
-  personType: PersonType,
-  personId: string,
-  attempts: number,
-  lockedUntil: Date | null
-) {
-  const table = tableFor(personType);
-  await db
-    .update(table)
-    .set({ failedPinAttempts: attempts, lockedUntil })
-    .where(eq(table.id, personId));
-}
-
-export async function resetFailedAttempts(db: Db, personType: PersonType, personId: string) {
-  await setFailedAttempts(db, personType, personId, 0, null);
-}
-
-export async function setPinHash(
-  db: Db,
-  personType: PersonType,
-  personId: string,
-  pinHash: string
-) {
-  const table = tableFor(personType);
-  await db.update(table).set({ pinHash }).where(eq(table.id, personId));
-}

@@ -5,12 +5,8 @@ import { login, type LoginResult } from "./login";
 import type { PersonType } from "@/lib/person";
 import { setSessionCookie } from "@/lib/authCookie";
 
-export async function loginAction(
-  personType: PersonType,
-  personId: string,
-  pin: string
-): Promise<LoginResult> {
-  const result = await login(db, personType, personId, pin);
+export async function loginAction(personType: PersonType, personId: string): Promise<LoginResult> {
+  const result = await login(db, personType, personId);
   if (result.success) {
     await setSessionCookie(result.token, result.expiresAt);
   }

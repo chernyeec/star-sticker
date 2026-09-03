@@ -16,7 +16,7 @@ export const dynamic = "force-dynamic";
 export default async function ParentDashboard() {
   const person = await getCurrentPerson();
   if (!person || person.personType !== "parent") {
-    redirect("/login");
+    redirect("/api/auto-login-parent");
   }
 
   const [members, rewards, pendingRedemptions] = await Promise.all([

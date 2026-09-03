@@ -12,9 +12,6 @@ export const parent = pgTable("parent", {
     .references(() => family.id),
   name: text("name").notNull(),
   avatar: text("avatar"),
-  pinHash: text("pin_hash").notNull(),
-  failedPinAttempts: integer("failed_pin_attempts").notNull().default(0),
-  lockedUntil: timestamp("locked_until", { withTimezone: true }),
 });
 
 export const kid = pgTable("kid", {
@@ -24,9 +21,6 @@ export const kid = pgTable("kid", {
     .references(() => family.id),
   name: text("name").notNull(),
   avatar: text("avatar"),
-  pinHash: text("pin_hash").notNull(),
-  failedPinAttempts: integer("failed_pin_attempts").notNull().default(0),
-  lockedUntil: timestamp("locked_until", { withTimezone: true }),
 });
 
 export const personTypeEnum = pgEnum("person_type", ["parent", "kid"]);

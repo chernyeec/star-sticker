@@ -1,19 +1,12 @@
 import { describe, it, expect } from "vitest";
 import { createTestDb } from "@/db/testDb";
 import { family, parent, kid } from "@/db/schema";
-import { hashPin } from "@/lib/pin";
 import { awardStars, getKidHistory, getKidBalance } from "./stars";
 
 async function seedFamily(db: Awaited<ReturnType<typeof createTestDb>>) {
   const [f] = await db.insert(family).values({ name: "The Smiths" }).returning();
-  const [p] = await db
-    .insert(parent)
-    .values({ familyId: f.id, name: "Mom", pinHash: await hashPin("1234") })
-    .returning();
-  const [k] = await db
-    .insert(kid)
-    .values({ familyId: f.id, name: "Sam", pinHash: await hashPin("0001") })
-    .returning();
+  const [p] = await db.insert(parent).values({ familyId: f.id, name: "Mom" }).returning();
+  const [k] = await db.insert(kid).values({ familyId: f.id, name: "Sam" }).returning();
   return { parentId: p.id, kidId: k.id };
 }
 

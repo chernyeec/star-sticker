@@ -43,6 +43,13 @@
       "when": 1788186912942,
       "tag": "0005_optimal_namor",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1788451408384,
+      "tag": "0006_remove_pin",
+      "breakpoints": true
     }
   ]
 }

@@ -4,15 +4,14 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { setupFamilyAction } from "@/actions/setup.action";
 
-type KidDraft = { name: string; avatar: string; pin: string };
+type KidDraft = { name: string; avatar: string };
 
 export default function SetupPage() {
   const router = useRouter();
   const [familyName, setFamilyName] = useState("");
   const [parentName, setParentName] = useState("");
   const [parentAvatar, setParentAvatar] = useState("");
-  const [parentPin, setParentPin] = useState("");
-  const [kids, setKids] = useState<KidDraft[]>([{ name: "", avatar: "", pin: "" }]);
+  const [kids, setKids] = useState<KidDraft[]>([{ name: "", avatar: "" }]);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -21,7 +20,7 @@ export default function SetupPage() {
   }
 
   function addKid() {
-    setKids((prev) => [...prev, { name: "", avatar: "", pin: "" }]);
+    setKids((prev) => [...prev, { name: "", avatar: "" }]);
   }
 
   function removeKid(index: number) {
@@ -35,10 +34,10 @@ export default function SetupPage() {
 
     const result = await setupFamilyAction({
       familyName,
-      parent: { name: parentName, avatar: parentAvatar || undefined, pin: parentPin },
+      parent: { name: parentName, avatar: parentAvatar || undefined },
       kids: kids
         .filter((k) => k.name.trim() !== "")
-        .map((k) => ({ name: k.name, avatar: k.avatar || undefined, pin: k.pin })),
+        .map((k) => ({ name: k.name, avatar: k.avatar || undefined })),
     });
 
     if (!result.success) {
@@ -82,16 +81,6 @@ export default function SetupPage() {
             onChange={(e) => setParentAvatar(e.target.value)}
           />
         </label>
-        <label>
-          Your PIN
-          <input
-            type="password"
-            inputMode="numeric"
-            required
-            value={parentPin}
-            onChange={(e) => setParentPin(e.target.value)}
-          />
-        </label>
 
         <h2>Kids</h2>
         {kids.map((k, i) => (
@@ -110,15 +99,6 @@ export default function SetupPage() {
                 type="text"
                 value={k.avatar}
                 onChange={(e) => updateKid(i, { avatar: e.target.value })}
-              />
-            </label>
-            <label>
-              PIN
-              <input
-                type="password"
-                inputMode="numeric"
-                value={k.pin}
-                onChange={(e) => updateKid(i, { pin: e.target.value })}
               />
             </label>
             {kids.length > 1 && (

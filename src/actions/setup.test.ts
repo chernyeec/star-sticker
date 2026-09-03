@@ -2,16 +2,15 @@ import { describe, it, expect } from "vitest";
 import { createTestDb } from "@/db/testDb";
 import { setupFamily } from "./setup";
 import { family, parent, kid } from "@/db/schema";
-import { verifyPin } from "@/lib/pin";
 
 describe("setupFamily", () => {
-  it("creates a Family, first Parent, and Kids with hashed PINs", async () => {
+  it("creates a Family, first Parent, and Kids", async () => {
     const db = await createTestDb();
 
     const result = await setupFamily(db, {
       familyName: "The Smiths",
-      parent: { name: "Mom", avatar: "🦊", pin: "1234" },
-      kids: [{ name: "Sam", avatar: "🐸", pin: "0001" }],
+      parent: { name: "Mom", avatar: "🦊" },
+      kids: [{ name: "Sam", avatar: "🐸" }],
     });
 
     expect(result.success).toBe(true);
@@ -22,12 +21,11 @@ describe("setupFamily", () => {
 
     const parents = await db.select().from(parent);
     expect(parents).toHaveLength(1);
-    expect(parents[0].pinHash).not.toContain("1234");
-    expect(await verifyPin("1234", parents[0].pinHash)).toBe(true);
+    expect(parents[0].name).toBe("Mom");
 
     const kids = await db.select().from(kid);
     expect(kids).toHaveLength(1);
-    expect(await verifyPin("0001", kids[0].pinHash)).toBe(true);
+    expect(kids[0].name).toBe("Sam");
   });
 
   it("refuses to create a second Family once one exists", async () => {
@@ -35,13 +33,13 @@ describe("setupFamily", () => {
 
     await setupFamily(db, {
       familyName: "The Smiths",
-      parent: { name: "Mom", avatar: "🦊", pin: "1234" },
+      parent: { name: "Mom", avatar: "🦊" },
       kids: [],
     });
 
     const result = await setupFamily(db, {
       familyName: "The Joneses",
-      parent: { name: "Dad", avatar: "🐻", pin: "5678" },
+      parent: { name: "Dad", avatar: "🐻" },
       kids: [],
     });
 

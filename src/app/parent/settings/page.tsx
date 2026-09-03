@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 export default async function SettingsPage() {
   const person = await getCurrentPerson();
   if (!person || person.personType !== "parent") {
-    redirect("/login");
+    redirect("/api/auto-login-parent");
   }
 
   const [members, rewards] = await Promise.all([listFamilyMembers(db), listActiveRewards(db)]);

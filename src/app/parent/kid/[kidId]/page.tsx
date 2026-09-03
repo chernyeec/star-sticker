@@ -18,7 +18,7 @@ export default async function KidRewardsView({
   const { kidId } = await params;
   const person = await getCurrentPerson();
   if (!person || person.personType !== "parent") {
-    redirect("/login");
+    redirect("/api/auto-login-parent");
   }
 
   const members = await listFamilyMembers(db);

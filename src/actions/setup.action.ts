@@ -9,7 +9,7 @@ export async function setupFamilyAction(input: SetupInput): Promise<SetupResult>
   const result = await setupFamily(db, input);
 
   if (result.success) {
-    const loginResult = await login(db, "parent", result.parentId, input.parent.pin);
+    const loginResult = await login(db, "parent", result.parentId);
     if (loginResult.success) {
       await setSessionCookie(loginResult.token, loginResult.expiresAt);
     }

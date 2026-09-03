@@ -7,8 +7,8 @@ import { resolveSession } from "@/lib/session";
 async function seedFamily(db: Awaited<ReturnType<typeof createTestDb>>) {
   const result = await setupFamily(db, {
     familyName: "The Smiths",
-    parent: { name: "Mom", avatar: "🦊", pin: "1234" },
-    kids: [{ name: "Sam", avatar: "🐸", pin: "0001" }],
+    parent: { name: "Mom", avatar: "🦊" },
+    kids: [{ name: "Sam", avatar: "🐸" }],
   });
   if (!result.success) throw new Error("setup failed");
 
@@ -17,11 +17,11 @@ async function seedFamily(db: Awaited<ReturnType<typeof createTestDb>>) {
 }
 
 describe("login", () => {
-  it("succeeds with the correct PIN and issues a resolvable session", async () => {
+  it("succeeds for an existing person and issues a resolvable session", async () => {
     const db = await createTestDb();
     const { parentId } = await seedFamily(db);
 
-    const result = await login(db, "parent", parentId, "1234");
+    const result = await login(db, "parent", parentId);
 
     expect(result.success).toBe(true);
     if (!result.success) throw new Error("expected success");
@@ -31,25 +31,12 @@ describe("login", () => {
     });
   });
 
-  it("fails with an incorrect PIN", async () => {
+  it("fails for a person that does not exist", async () => {
     const db = await createTestDb();
-    const { parentId } = await seedFamily(db);
+    await seedFamily(db);
 
-    const result = await login(db, "parent", parentId, "0000");
+    const result = await login(db, "parent", "00000000-0000-0000-0000-000000000000");
 
-    expect(result).toEqual({ success: false, reason: "invalid_pin" });
-  });
-
-  it("locks out after 5 failed attempts, rejecting even a correct PIN during cooldown", async () => {
-    const db = await createTestDb();
-    const { parentId } = await seedFamily(db);
-
-    for (let i = 0; i < 5; i++) {
-      await login(db, "parent", parentId, "0000");
-    }
-
-    const result = await login(db, "parent", parentId, "1234");
-
-    expect(result).toEqual({ success: false, reason: "locked" });
+    expect(result).toEqual({ success: false, reason: "not_found" });
   });
 });

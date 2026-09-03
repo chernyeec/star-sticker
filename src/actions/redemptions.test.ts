@@ -1,7 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { createTestDb } from "@/db/testDb";
 import { family, parent, kid } from "@/db/schema";
-import { hashPin } from "@/lib/pin";
 import { createReward } from "./rewards";
 import { awardStars, getKidBalance } from "./stars";
 import {
@@ -14,14 +13,8 @@ import {
 
 async function seedFamily(db: Awaited<ReturnType<typeof createTestDb>>) {
   const [f] = await db.insert(family).values({ name: "The Smiths" }).returning();
-  const [p] = await db
-    .insert(parent)
-    .values({ familyId: f.id, name: "Mom", pinHash: await hashPin("1234") })
-    .returning();
-  const [k] = await db
-    .insert(kid)
-    .values({ familyId: f.id, name: "Sam", pinHash: await hashPin("0001") })
-    .returning();
+  const [p] = await db.insert(parent).values({ familyId: f.id, name: "Mom" }).returning();
+  const [k] = await db.insert(kid).values({ familyId: f.id, name: "Sam" }).returning();
   const reward = await createReward(db, { familyId: f.id, name: "Ice cream", cost: 10 });
   return { familyId: f.id, parentId: p.id, kidId: k.id, reward };
 }
@@ -97,10 +90,7 @@ describe("redemptions", () => {
     await awardStars(db, { kidId, amount: 10, createdByParentId: parentId });
     const redemption = await requestRedemption(db, { kidId, rewardId: reward.id });
 
-    const [otherKid] = await db
-      .insert(kid)
-      .values({ familyId, name: "Alex", pinHash: await hashPin("0002") })
-      .returning();
+    const [otherKid] = await db.insert(kid).values({ familyId, name: "Alex" }).returning();
 
     await expect(
       cancelRedemption(db, { redemptionId: redemption.id, kidId: otherKid.id })

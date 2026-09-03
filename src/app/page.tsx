@@ -8,5 +8,5 @@ export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const exists = await familyExists(db);
-  redirect(exists ? "/login" : "/setup");
+  redirect(exists ? "/parent" : "/setup");
 }
