@@ -7,6 +7,13 @@ type Db = typeof realDb;
 
 export type Redemption = typeof redemption.$inferSelect;
 
+export const STATUS_LABEL: Record<Redemption["status"], string> = {
+  pending: "Waiting for a parent",
+  approved: "Approved",
+  rejected: "Not this time",
+  cancelled: "Cancelled",
+};
+
 async function getPendingRedemption(
   db: Db,
   redemptionId: string,
@@ -49,6 +56,14 @@ export async function requestRedemption(
     .returning();
 
   return created;
+}
+
+export async function redeemForKid(
+  db: Db,
+  input: { kidId: string; rewardId: string; parentId: string }
+): Promise<Redemption> {
+  const requested = await requestRedemption(db, { kidId: input.kidId, rewardId: input.rewardId });
+  return approveRedemption(db, { redemptionId: requested.id, parentId: input.parentId });
 }
 
 export async function approveRedemption(

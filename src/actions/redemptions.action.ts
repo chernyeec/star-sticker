@@ -4,6 +4,7 @@ import { db } from "@/db/client";
 import { getCurrentPerson, requireParent } from "@/lib/currentPerson";
 import {
   requestRedemption,
+  redeemForKid,
   approveRedemption,
   rejectRedemption,
   cancelRedemption,
@@ -31,6 +32,19 @@ export async function cancelRedemptionAction(redemptionId: string): Promise<Rede
   }
 
   const redemption = await cancelRedemption(db, { redemptionId, kidId: person.personId });
+  return { success: true, redemption };
+}
+
+export async function redeemForKidAction(
+  kidId: string,
+  rewardId: string
+): Promise<RedemptionActionResult> {
+  const parent = await requireParent();
+  if (!parent) {
+    return { success: false, reason: "not_authorized" };
+  }
+
+  const redemption = await redeemForKid(db, { kidId, rewardId, parentId: parent.personId });
   return { success: true, redemption };
 }
 

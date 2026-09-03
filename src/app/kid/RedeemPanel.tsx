@@ -4,14 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { requestRedemptionAction, cancelRedemptionAction } from "@/actions/redemptions.action";
 import type { Reward } from "@/actions/rewards";
-import type { Redemption } from "@/actions/redemptions";
-
-const STATUS_LABEL: Record<Redemption["status"], string> = {
-  pending: "Waiting for a parent",
-  approved: "Approved",
-  rejected: "Not this time",
-  cancelled: "Cancelled",
-};
+import { STATUS_LABEL, type Redemption } from "@/actions/redemptions";
 
 export default function RedeemPanel({
   rewards,
