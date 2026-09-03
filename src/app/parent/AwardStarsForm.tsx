@@ -58,6 +58,12 @@ export default function AwardStarsForm({ kids }: { kids: FamilyMember[] }) {
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
         />
+        <button type="button" onClick={() => setAmount(String(Number(amount || 0) - 1))}>
+          −
+        </button>
+        <button type="button" onClick={() => setAmount(String(Number(amount || 0) + 1))}>
+          +
+        </button>
       </label>
       <label>
         Reason (optional)
