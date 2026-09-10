@@ -24,9 +24,20 @@ export const viewport: Viewport = {
   themeColor: "#ffb300",
 };
 
+const THEME_INIT_SCRIPT = `
+  try {
+    if (localStorage.getItem("theme") === "dark") {
+      document.documentElement.setAttribute("data-theme", "dark");
+    }
+  } catch (e) {}
+`;
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={fredoka.variable}>
+    <html lang="en" className={fredoka.variable} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
       <body>
         <ServiceWorkerRegistration />
         {children}

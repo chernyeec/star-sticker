@@ -13,6 +13,27 @@
   --pastel-2: #f6e4a6;
   --pastel-3: #d8e8b0;
   --pastel-4: #f3cbdd;
+  --surface: #faf7f2;
+  --border: #ece5da;
+}
+
+:root[data-theme="dark"] {
+  --bg: #1c1712;
+  --card: #2a231c;
+  --ink: #f3eee6;
+  --ink-soft: #b3a696;
+  --accent: #f6a64c;
+  --accent-dark: #ffbd6f;
+  --accent-soft: #4a3420;
+  --danger: #ff8a7f;
+  --danger-bg: #3a1f1c;
+  --danger-border: #5c2e28;
+  --pastel-1: #2f4a44;
+  --pastel-2: #4a4326;
+  --pastel-3: #37401f;
+  --pastel-4: #442635;
+  --surface: #241e18;
+  --border: #3a322a;
 }
 
 html {
@@ -145,8 +166,8 @@ ul {
 }
 
 li {
-  background: #faf7f2;
-  border: 1px solid #ece5da;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 1rem;
   padding: 0.6rem 0.85rem;
   margin-bottom: 0.5rem;
@@ -171,7 +192,7 @@ select {
   width: 100%;
   min-height: 44px;
   padding: 0.5rem 0.75rem;
-  border: 2px solid #ece5da;
+  border: 2px solid var(--border);
   border-radius: 1rem;
   background: var(--card);
   color: inherit;

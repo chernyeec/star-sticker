@@ -5,6 +5,7 @@ import { listFamilyMembers } from "@/actions/family";
 import { listActiveRewards } from "@/actions/rewards";
 import ManageFamilyPanel from "../manage/ManageFamilyPanel";
 import RewardsManager from "../RewardsManager";
+import ThemeToggle from "./ThemeToggle";
 
 export const dynamic = "force-dynamic";
 
@@ -21,6 +22,9 @@ export default async function SettingsPage() {
       <h1>Settings</h1>
       <ManageFamilyPanel members={members} />
       <RewardsManager rewards={rewards} />
+
+      <h2>Appearance</h2>
+      <ThemeToggle />
     </div>
   );
 }
