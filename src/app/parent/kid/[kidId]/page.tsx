@@ -16,22 +16,21 @@ export default async function KidRewardsView({
   params: Promise<{ kidId: string }>;
 }) {
   const { kidId } = await params;
-  const person = await getCurrentPerson();
-  if (!person || person.personType !== "parent") {
-    redirect("/api/auto-login-parent");
-  }
-
-  const members = await listFamilyMembers(db);
-  const kid = members.find((m) => m.id === kidId && m.type === "kid");
-  if (!kid) {
-    notFound();
-  }
-
-  const [balance, rewards, redemptions] = await Promise.all([
+  const [person, members, balance, rewards, redemptions] = await Promise.all([
+    getCurrentPerson(),
+    listFamilyMembers(db),
     getKidBalance(db, kidId),
     listActiveRewards(db),
     listKidRedemptions(db, kidId),
   ]);
+  if (!person || person.personType !== "parent") {
+    redirect("/api/auto-login-parent");
+  }
+
+  const kid = members.find((m) => m.id === kidId && m.type === "kid");
+  if (!kid) {
+    notFound();
+  }
 
   return (
     <div className="container">

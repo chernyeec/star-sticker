@@ -50,6 +50,13 @@
       "when": 1788451408384,
       "tag": "0006_remove_pin",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1789012842744,
+      "tag": "0007_add_kid_id_indexes",
+      "breakpoints": true
     }
   ]
 }

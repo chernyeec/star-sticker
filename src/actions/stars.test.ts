@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { createTestDb } from "@/db/testDb";
 import { family, parent, kid } from "@/db/schema";
-import { awardStars, getKidHistory, getKidBalance } from "./stars";
+import { awardStars, getKidHistory, getKidBalance, listAllKidBalances } from "./stars";
 
 async function seedFamily(db: Awaited<ReturnType<typeof createTestDb>>) {
   const [f] = await db.insert(family).values({ name: "The Smiths" }).returning();
@@ -62,6 +62,23 @@ describe("stars", () => {
     const { kidId } = await seedFamily(db);
 
     expect(await getKidBalance(db, kidId)).toBe(0);
+  });
+
+  it("lists every kid's balance in one query, omitting kids with no entries", async () => {
+    const db = await createTestDb();
+    const { parentId, kidId } = await seedFamily(db);
+    const [f] = await db.select().from(family);
+    const [otherKid] = await db.insert(kid).values({ familyId: f.id, name: "Other" }).returning();
+
+    await awardStars(db, { kidId, amount: 3, createdByParentId: parentId });
+    await awardStars(db, { kidId, amount: -1, createdByParentId: parentId });
+    await awardStars(db, { kidId: otherKid.id, amount: 5, createdByParentId: parentId });
+
+    const balances = await listAllKidBalances(db);
+
+    expect(balances.get(kidId)).toBe(2);
+    expect(balances.get(otherKid.id)).toBe(5);
+    expect(balances.size).toBe(2);
   });
 
   it("returns history newest-first", async () => {

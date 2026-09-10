@@ -1,4 +1,4 @@
-import { pgTable, text, integer, timestamp, uuid, pgEnum, bigserial } from "drizzle-orm/pg-core";
+import { pgTable, text, integer, timestamp, uuid, pgEnum, bigserial, index } from "drizzle-orm/pg-core";
 
 export const family = pgTable("family", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -34,21 +34,25 @@ export const session = pgTable("session", {
   expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
 });
 
-export const starLedgerEntry = pgTable("star_ledger_entry", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  // Monotonic insertion order, for stable history ordering — wall-clock
-  // createdAt can tie between two rapid inserts.
-  sequence: bigserial("sequence", { mode: "number" }).notNull(),
-  kidId: uuid("kid_id")
-    .notNull()
-    .references(() => kid.id),
-  amount: integer("amount").notNull(),
-  reason: text("reason"),
-  createdByParentId: uuid("created_by_parent_id")
-    .notNull()
-    .references(() => parent.id),
-  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-});
+export const starLedgerEntry = pgTable(
+  "star_ledger_entry",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    // Monotonic insertion order, for stable history ordering — wall-clock
+    // createdAt can tie between two rapid inserts.
+    sequence: bigserial("sequence", { mode: "number" }).notNull(),
+    kidId: uuid("kid_id")
+      .notNull()
+      .references(() => kid.id),
+    amount: integer("amount").notNull(),
+    reason: text("reason"),
+    createdByParentId: uuid("created_by_parent_id")
+      .notNull()
+      .references(() => parent.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [index("star_ledger_entry_kid_id_idx").on(table.kidId)]
+);
 
 export const reward = pgTable("reward", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -68,19 +72,23 @@ export const redemptionStatusEnum = pgEnum("redemption_status", [
 ]);
 export type RedemptionStatus = (typeof redemptionStatusEnum.enumValues)[number];
 
-export const redemption = pgTable("redemption", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  // Monotonic insertion order, for stable history ordering — see the
-  // same field on star_ledger_entry for why.
-  sequence: bigserial("sequence", { mode: "number" }).notNull(),
-  kidId: uuid("kid_id")
-    .notNull()
-    .references(() => kid.id),
-  rewardNameSnapshot: text("reward_name_snapshot").notNull(),
-  rewardCostSnapshot: integer("reward_cost_snapshot").notNull(),
-  status: redemptionStatusEnum("status").notNull().default("pending"),
-  requestedAt: timestamp("requested_at", { withTimezone: true }).notNull().defaultNow(),
-  resolvedAt: timestamp("resolved_at", { withTimezone: true }),
-  resolvedByParentId: uuid("resolved_by_parent_id").references(() => parent.id),
-  rejectReason: text("reject_reason"),
-});
+export const redemption = pgTable(
+  "redemption",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    // Monotonic insertion order, for stable history ordering — see the
+    // same field on star_ledger_entry for why.
+    sequence: bigserial("sequence", { mode: "number" }).notNull(),
+    kidId: uuid("kid_id")
+      .notNull()
+      .references(() => kid.id),
+    rewardNameSnapshot: text("reward_name_snapshot").notNull(),
+    rewardCostSnapshot: integer("reward_cost_snapshot").notNull(),
+    status: redemptionStatusEnum("status").notNull().default("pending"),
+    requestedAt: timestamp("requested_at", { withTimezone: true }).notNull().defaultNow(),
+    resolvedAt: timestamp("resolved_at", { withTimezone: true }),
+    resolvedByParentId: uuid("resolved_by_parent_id").references(() => parent.id),
+    rejectReason: text("reject_reason"),
+  },
+  (table) => [index("redemption_kid_id_idx").on(table.kidId)]
+);
