@@ -9,6 +9,7 @@ import {
   rejectRedemption,
   cancelRedemption,
   listPendingRedemptions,
+  listKidRedemptionsPage,
 } from "./redemptions";
 
 async function seedFamily(db: Awaited<ReturnType<typeof createTestDb>>) {
@@ -120,5 +121,24 @@ describe("redemptions", () => {
     const pending = await listPendingRedemptions(db);
 
     expect(pending.map((r) => r.id)).toEqual([redemption.id]);
+  });
+
+  it("paginates a Kid's redemptions with a cursor", async () => {
+    const db = await createTestDb();
+    const { kidId, reward, parentId } = await seedFamily(db);
+    await awardStars(db, { kidId, amount: 10, createdByParentId: parentId });
+
+    for (let i = 0; i < 12; i++) {
+      await requestRedemption(db, { kidId, rewardId: reward.id });
+    }
+
+    const firstPage = await listKidRedemptionsPage(db, kidId);
+    expect(firstPage.redemptions).toHaveLength(10);
+    expect(firstPage.hasMore).toBe(true);
+
+    const oldestOnFirstPage = firstPage.redemptions.at(-1)!.sequence;
+    const secondPage = await listKidRedemptionsPage(db, kidId, oldestOnFirstPage);
+    expect(secondPage.redemptions).toHaveLength(2);
+    expect(secondPage.hasMore).toBe(false);
   });
 });

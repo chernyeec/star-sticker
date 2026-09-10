@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { createTestDb } from "@/db/testDb";
 import { family, parent, kid } from "@/db/schema";
-import { awardStars, getKidHistory, getKidBalance, listAllKidBalances } from "./stars";
+import { awardStars, getKidHistoryPage, getKidBalance, listAllKidBalances } from "./stars";
 
 async function seedFamily(db: Awaited<ReturnType<typeof createTestDb>>) {
   const [f] = await db.insert(family).values({ name: "The Smiths" }).returning();
@@ -88,8 +88,28 @@ describe("stars", () => {
     const first = await awardStars(db, { kidId, amount: 1, createdByParentId: parentId });
     const second = await awardStars(db, { kidId, amount: 2, createdByParentId: parentId });
 
-    const history = await getKidHistory(db, kidId);
+    const { entries } = await getKidHistoryPage(db, kidId);
 
-    expect(history.map((e) => e.id)).toEqual([second.id, first.id]);
+    expect(entries.map((e) => e.id)).toEqual([second.id, first.id]);
+  });
+
+  it("paginates history with a cursor, oldest page first is false until you page past it", async () => {
+    const db = await createTestDb();
+    const { parentId, kidId } = await seedFamily(db);
+
+    for (let i = 1; i <= 12; i++) {
+      await awardStars(db, { kidId, amount: i, createdByParentId: parentId });
+    }
+
+    const firstPage = await getKidHistoryPage(db, kidId);
+    expect(firstPage.entries).toHaveLength(10);
+    expect(firstPage.entries[0].amount).toBe(12);
+    expect(firstPage.hasMore).toBe(true);
+
+    const oldestOnFirstPage = firstPage.entries.at(-1)!.sequence;
+    const secondPage = await getKidHistoryPage(db, kidId, oldestOnFirstPage);
+    expect(secondPage.entries).toHaveLength(2);
+    expect(secondPage.entries[0].amount).toBe(2);
+    expect(secondPage.hasMore).toBe(false);
   });
 });

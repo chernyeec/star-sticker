@@ -1,4 +1,4 @@
-import { eq, and, desc } from "drizzle-orm";
+import { eq, and, lt, desc } from "drizzle-orm";
 import type { db as realDb } from "@/db/client";
 import { redemption, reward } from "@/db/schema";
 import { awardStars, getKidBalance } from "./stars";
@@ -6,6 +6,8 @@ import { awardStars, getKidBalance } from "./stars";
 type Db = typeof realDb;
 
 export type Redemption = typeof redemption.$inferSelect;
+
+export const REDEMPTIONS_PAGE_SIZE = 10;
 
 export const STATUS_LABEL: Record<Redemption["status"], string> = {
   pending: "Waiting for a parent",
@@ -137,4 +139,24 @@ export async function listKidRedemptions(db: Db, kidId: string): Promise<Redempt
     .from(redemption)
     .where(eq(redemption.kidId, kidId))
     .orderBy(desc(redemption.sequence));
+}
+
+// Same keyset-pagination approach as getKidHistoryPage -- see that
+// comment for why this uses `sequence` instead of OFFSET.
+export async function listKidRedemptionsPage(
+  db: Db,
+  kidId: string,
+  before?: number
+): Promise<{ redemptions: Redemption[]; hasMore: boolean }> {
+  const conditions = [eq(redemption.kidId, kidId)];
+  if (before !== undefined) conditions.push(lt(redemption.sequence, before));
+
+  const rows = await db
+    .select()
+    .from(redemption)
+    .where(and(...conditions))
+    .orderBy(desc(redemption.sequence))
+    .limit(REDEMPTIONS_PAGE_SIZE + 1);
+
+  return { redemptions: rows.slice(0, REDEMPTIONS_PAGE_SIZE), hasMore: rows.length > REDEMPTIONS_PAGE_SIZE };
 }

@@ -1,10 +1,12 @@
-import { eq, desc, sql } from "drizzle-orm";
+import { eq, and, lt, desc, sql } from "drizzle-orm";
 import type { db as realDb } from "@/db/client";
 import { starLedgerEntry } from "@/db/schema";
 
 type Db = typeof realDb;
 
 export type StarLedgerEntry = typeof starLedgerEntry.$inferSelect;
+
+export const HISTORY_PAGE_SIZE = 10;
 
 export async function awardStars(
   db: Db,
@@ -23,12 +25,24 @@ export async function awardStars(
   return entry;
 }
 
-export async function getKidHistory(db: Db, kidId: string): Promise<StarLedgerEntry[]> {
-  return db
+// Keyset pagination on `sequence` -- unlike OFFSET, this stays flat-cost
+// as the ledger grows, and the column already exists for stable ordering.
+export async function getKidHistoryPage(
+  db: Db,
+  kidId: string,
+  before?: number
+): Promise<{ entries: StarLedgerEntry[]; hasMore: boolean }> {
+  const conditions = [eq(starLedgerEntry.kidId, kidId)];
+  if (before !== undefined) conditions.push(lt(starLedgerEntry.sequence, before));
+
+  const rows = await db
     .select()
     .from(starLedgerEntry)
-    .where(eq(starLedgerEntry.kidId, kidId))
-    .orderBy(desc(starLedgerEntry.sequence));
+    .where(and(...conditions))
+    .orderBy(desc(starLedgerEntry.sequence))
+    .limit(HISTORY_PAGE_SIZE + 1);
+
+  return { entries: rows.slice(0, HISTORY_PAGE_SIZE), hasMore: rows.length > HISTORY_PAGE_SIZE };
 }
 
 export async function getKidBalance(db: Db, kidId: string): Promise<number> {
