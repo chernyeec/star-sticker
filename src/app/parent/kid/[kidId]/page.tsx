@@ -3,7 +3,7 @@ import Link from "next/link";
 import { getCurrentPerson } from "@/lib/currentPerson";
 import { db } from "@/db/client";
 import { listFamilyMembers } from "@/actions/family";
-import { getKidBalance } from "@/actions/stars";
+import { getKidBalance, getKidHistory } from "@/actions/stars";
 import { listActiveRewards } from "@/actions/rewards";
 import { listKidRedemptions, STATUS_LABEL } from "@/actions/redemptions";
 import RedeemRewardButton from "./RedeemRewardButton";
@@ -16,10 +16,11 @@ export default async function KidRewardsView({
   params: Promise<{ kidId: string }>;
 }) {
   const { kidId } = await params;
-  const [person, members, balance, rewards, redemptions] = await Promise.all([
+  const [person, members, balance, history, rewards, redemptions] = await Promise.all([
     getCurrentPerson(),
     listFamilyMembers(db),
     getKidBalance(db, kidId),
+    getKidHistory(db, kidId),
     listActiveRewards(db),
     listKidRedemptions(db, kidId),
   ]);
@@ -39,6 +40,22 @@ export default async function KidRewardsView({
         {kid.name}
       </h1>
       <p className="star-balance">{balance} ⭐</p>
+
+      <h2>History</h2>
+      {history.length === 0 ? (
+        <p>No stars yet.</p>
+      ) : (
+        <ul>
+          {history.map((entry) => (
+            <li key={entry.id}>
+              {entry.amount > 0 ? `+${entry.amount}` : entry.amount}
+              {entry.reason ? ` — ${entry.reason}` : ""}
+              {" · "}
+              {entry.createdAt.toLocaleDateString()}
+            </li>
+          ))}
+        </ul>
+      )}
 
       <h2>Rewards</h2>
       {rewards.length === 0 ? (
