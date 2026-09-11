@@ -230,6 +230,24 @@ button:disabled {
   cursor: not-allowed;
 }
 
+.kid-pick {
+  background: var(--surface);
+  color: var(--ink-soft);
+  border: 2px solid var(--border);
+  box-shadow: none;
+  opacity: 0.7;
+  transition: transform 0.1s ease, filter 0.1s ease, opacity 0.1s ease;
+}
+
+.kid-pick[aria-pressed="true"] {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent-dark);
+  box-shadow: 0 3px 10px rgba(217, 130, 31, 0.35), 0 0 0 3px var(--accent-soft);
+  opacity: 1;
+  transform: scale(1.06);
+}
+
 p[role="alert"] {
   color: var(--danger);
   background: var(--danger-bg);

@@ -38,17 +38,21 @@ export default function AwardStarsForm({ kids }: { kids: FamilyMember[] }) {
   return (
     <form onSubmit={handleSubmit}>
       <h2>Award or deduct stars</h2>
-      <label>
-        Kid
-        <select value={kidId} onChange={(e) => setKidId(e.target.value)}>
-          {kids.map((k) => (
-            <option key={k.id} value={k.id}>
-              {k.avatar ? `${k.avatar} ` : ""}
-              {k.name}
-            </option>
-          ))}
-        </select>
-      </label>
+      <span>Kid</span>
+      <div style={{ display: "flex", gap: "0.5rem", marginBottom: "0.75rem" }}>
+        {kids.map((k) => (
+          <button
+            key={k.id}
+            type="button"
+            className="kid-pick"
+            aria-pressed={kidId === k.id}
+            onClick={() => setKidId(k.id)}
+          >
+            {k.avatar ? `${k.avatar} ` : ""}
+            {k.name}
+          </button>
+        ))}
+      </div>
       <label>
         Stars (negative to deduct)
         <input
@@ -58,10 +62,18 @@ export default function AwardStarsForm({ kids }: { kids: FamilyMember[] }) {
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
         />
-        <button type="button" onClick={() => setAmount(String(Number(amount || 0) + 1))}>
+        <button
+          type="button"
+          style={{ fontSize: "1.5rem", lineHeight: 1, padding: "0.25rem 0.75rem" }}
+          onClick={() => setAmount(String(Number(amount || 0) + 1))}
+        >
           +
         </button>
-        <button type="button" onClick={() => setAmount(String(Number(amount || 0) - 1))}>
+        <button
+          type="button"
+          style={{ fontSize: "1.5rem", lineHeight: 1, padding: "0.25rem 0.75rem" }}
+          onClick={() => setAmount(String(Number(amount || 0) - 1))}
+        >
           −
         </button>
       </label>

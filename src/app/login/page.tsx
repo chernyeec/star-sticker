@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { listFamilyMembersAction } from "@/actions/family.action";
 import { loginAction } from "@/actions/login.action";
 import type { FamilyMember } from "@/actions/family";
+import { StarMascot } from "../star-mascot";
 
 export const dynamic = "force-dynamic";
 
@@ -37,6 +38,17 @@ export default function LoginPage() {
 
   return (
     <div className="container">
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          marginBottom: "0.5rem",
+        }}
+      >
+        <div style={{ borderRadius: "50%", overflow: "hidden" }}>
+          <StarMascot size={96} />
+        </div>
+      </div>
       <h1>Who&rsquo;s this?</h1>
       {error && <p role="alert">{error}</p>}
       <div>
