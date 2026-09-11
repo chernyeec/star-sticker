@@ -34,13 +34,10 @@ export default async function ParentDashboard() {
       <ul className="kid-grid">
         {kids.map((kid, i) => (
           <li key={kid.id}>
-            <span>
-              <Link href={`/parent/kid/${kid.id}`}>
-                {kid.avatar ? `${kid.avatar} ` : ""}
-                {kid.name}
-              </Link>{" "}
-              {balances[i]} ⭐
-            </span>
+            <Link href={`/parent/kid/${kid.id}`}>
+              {kid.avatar ? `${kid.avatar} ` : ""}
+              {kid.name} {balances[i]} ⭐
+            </Link>
           </li>
         ))}
       </ul>

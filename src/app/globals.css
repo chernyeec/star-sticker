@@ -132,24 +132,22 @@ ul {
 
 .kid-grid > li {
   margin-bottom: 0;
-  flex-direction: column;
-  justify-content: center;
   border: none;
   border-radius: 1.25rem;
-  padding: 1.5rem 0.75rem;
+  padding: 0;
   box-shadow: none;
 }
 
-.kid-grid > li > span {
+.kid-grid > li a {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.3rem;
-}
-
-.kid-grid > li a {
+  width: 100%;
+  padding: 1.5rem 0.75rem;
   text-decoration: none;
   font-size: 1.1rem;
+  color: inherit;
 }
 
 .kid-grid > li:nth-child(4n + 1) {
