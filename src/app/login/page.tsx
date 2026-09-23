@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { listFamilyMembersAction } from "@/actions/family.action";
 import { loginAction } from "@/actions/login.action";
 import type { FamilyMember } from "@/actions/family";
-import { StarMascot } from "../star-mascot";
+import PersonLabel from "../PersonLabel";
 
 export const dynamic = "force-dynamic";
 
@@ -45,8 +45,17 @@ export default function LoginPage() {
           marginBottom: "0.5rem",
         }}
       >
-        <div style={{ borderRadius: "50%", overflow: "hidden" }}>
-          <StarMascot size={96} />
+        <div style={{ borderRadius: "50%", overflow: "hidden", width: "96px", height: "96px" }}>
+          <video
+            src="/animated-star.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+            width={96}
+            height={96}
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          />
         </div>
       </div>
       <h1>Who&rsquo;s this?</h1>
@@ -57,10 +66,14 @@ export default function LoginPage() {
             key={m.id}
             disabled={loggingInId !== null}
             onClick={() => handleSelect(m)}
-            style={{ display: "block", width: "100%", marginBottom: "0.5rem" }}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              width: "100%",
+              marginBottom: "0.5rem",
+            }}
           >
-            {m.avatar ? `${m.avatar} ` : ""}
-            {m.name}
+            <PersonLabel name={m.name} avatar={m.avatar} size={36} />
           </button>
         ))}
       </div>

@@ -7,6 +7,7 @@ import { getKidBalance, getKidHistoryPage } from "@/actions/stars";
 import { listActiveRewards } from "@/actions/rewards";
 import { listKidRedemptionsPage, STATUS_LABEL } from "@/actions/redemptions";
 import RedeemRewardButton from "./RedeemRewardButton";
+import { getKidPhoto } from "@/lib/kidPhotos";
 
 export const dynamic = "force-dynamic";
 
@@ -57,11 +58,25 @@ export default async function KidRewardsView({
   const { entries: history, hasMore: moreHistory } = historyPage;
   const oldestRedemptionSequence = redemptions.at(-1)?.sequence;
   const oldestHistorySequence = history.at(-1)?.sequence;
+  const photo = getKidPhoto(kid.name);
+
+  const cardTint = "color-mix(in srgb, var(--card) 80%, transparent)";
 
   return (
-    <div className="container">
+    <div
+      className="container"
+      style={
+        photo
+          ? {
+              backgroundImage: `linear-gradient(${cardTint}, ${cardTint}), url(${photo})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }
+          : undefined
+      }
+    >
       <h1>
-        {kid.avatar ? `${kid.avatar} ` : ""}
+        {!photo && kid.avatar ? `${kid.avatar} ` : ""}
         {kid.name}
       </h1>
       <p className="star-balance">{balance} ⭐</p>

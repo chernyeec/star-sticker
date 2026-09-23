@@ -5,6 +5,8 @@ import { db } from "@/db/client";
 import { getKidHistoryPage, getKidBalance } from "@/actions/stars";
 import { listActiveRewards } from "@/actions/rewards";
 import { listKidRedemptions } from "@/actions/redemptions";
+import { listFamilyMembers } from "@/actions/family";
+import { getKidPhoto } from "@/lib/kidPhotos";
 import LogoutButton from "../LogoutButton";
 import RedeemPanel from "./RedeemPanel";
 
@@ -28,17 +30,32 @@ export default async function KidView({
 
   const historyBefore = parseCursor((await searchParams).historyBefore);
 
-  const [historyPage, balance, rewards, redemptions] = await Promise.all([
+  const [historyPage, balance, rewards, redemptions, members] = await Promise.all([
     getKidHistoryPage(db, person.personId, historyBefore),
     getKidBalance(db, person.personId),
     listActiveRewards(db),
     listKidRedemptions(db, person.personId),
+    listFamilyMembers(db),
   ]);
   const { entries: history, hasMore } = historyPage;
   const oldestSequence = history.at(-1)?.sequence;
+  const kidName = members.find((m) => m.id === person.personId)?.name;
+  const photo = kidName ? getKidPhoto(kidName) : undefined;
+  const cardTint = "color-mix(in srgb, var(--card) 80%, transparent)";
 
   return (
-    <div className="container">
+    <div
+      className="container"
+      style={
+        photo
+          ? {
+              backgroundImage: `linear-gradient(${cardTint}, ${cardTint}), url(${photo})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }
+          : undefined
+      }
+    >
       <h1>⭐ Your stars ⭐</h1>
       <p className="star-balance">{balance}</p>
 

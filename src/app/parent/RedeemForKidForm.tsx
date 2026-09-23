@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { redeemForKidAction } from "@/actions/redemptions.action";
 import type { FamilyMember } from "@/actions/family";
 import type { Reward } from "@/actions/rewards";
+import PersonLabel from "../PersonLabel";
 
 export default function RedeemForKidForm({
   kids,
@@ -45,8 +46,7 @@ export default function RedeemForKidForm({
   return (
     <form onSubmit={handleSubmit}>
       <h2>Redeem for a kid</h2>
-      <span>Kid</span>
-      <div style={{ display: "flex", gap: "0.5rem", marginBottom: "0.75rem" }}>
+      <div style={{ display: "flex", gap: "0.35rem", marginBottom: "0.75rem" }}>
         {kids.map((k) => (
           <button
             key={k.id}
@@ -55,8 +55,7 @@ export default function RedeemForKidForm({
             aria-pressed={kidId === k.id}
             onClick={() => setKidId(k.id)}
           >
-            {k.avatar ? `${k.avatar} ` : ""}
-            {k.name}
+            <PersonLabel name={k.name} avatar={k.avatar} />
           </button>
         ))}
       </div>

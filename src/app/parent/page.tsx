@@ -10,6 +10,8 @@ import LogoutButton from "../LogoutButton";
 import AwardStarsForm from "./AwardStarsForm";
 import RedeemForKidForm from "./RedeemForKidForm";
 import PendingRedemptions from "./PendingRedemptions";
+import PersonLabel from "../PersonLabel";
+import { getKidPhoto } from "@/lib/kidPhotos";
 
 export const dynamic = "force-dynamic";
 
@@ -27,16 +29,27 @@ export default async function ParentDashboard() {
 
   const kids = members.filter((m) => m.type === "kid");
   const balances = kids.map((kid) => kidBalances.get(kid.id) ?? 0);
+  const photo = getKidPhoto("Pei Jin");
+  const cardTint = "color-mix(in srgb, var(--card) 80%, transparent)";
 
   return (
-    <div className="container">
-      <h1>Parent dashboard</h1>
+    <div
+      className="container"
+      style={
+        photo
+          ? {
+              backgroundImage: `linear-gradient(${cardTint}, ${cardTint}), url(${photo})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }
+          : undefined
+      }
+    >
       <ul className="kid-grid">
         {kids.map((kid, i) => (
           <li key={kid.id}>
             <Link href={`/parent/kid/${kid.id}`}>
-              {kid.avatar ? `${kid.avatar} ` : ""}
-              {kid.name} {balances[i]} ⭐
+              <PersonLabel name={kid.name} avatar={kid.avatar} size={96} /> {balances[i]} ⭐
             </Link>
           </li>
         ))}

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { awardStarsAction } from "@/actions/stars.action";
 import type { FamilyMember } from "@/actions/family";
+import PersonLabel from "../PersonLabel";
 
 export default function AwardStarsForm({ kids }: { kids: FamilyMember[] }) {
   const router = useRouter();
@@ -12,6 +13,8 @@ export default function AwardStarsForm({ kids }: { kids: FamilyMember[] }) {
   const [reason, setReason] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [burstKey, setBurstKey] = useState(0);
+  const [fallKey, setFallKey] = useState(0);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -38,8 +41,7 @@ export default function AwardStarsForm({ kids }: { kids: FamilyMember[] }) {
   return (
     <form onSubmit={handleSubmit}>
       <h2>Award or deduct stars</h2>
-      <span>Kid</span>
-      <div style={{ display: "flex", gap: "0.5rem", marginBottom: "0.75rem" }}>
+      <div style={{ display: "flex", gap: "0.35rem", marginBottom: "0.75rem" }}>
         {kids.map((k) => (
           <button
             key={k.id}
@@ -48,8 +50,7 @@ export default function AwardStarsForm({ kids }: { kids: FamilyMember[] }) {
             aria-pressed={kidId === k.id}
             onClick={() => setKidId(k.id)}
           >
-            {k.avatar ? `${k.avatar} ` : ""}
-            {k.name}
+            <PersonLabel name={k.name} avatar={k.avatar} />
           </button>
         ))}
       </div>
@@ -62,20 +63,40 @@ export default function AwardStarsForm({ kids }: { kids: FamilyMember[] }) {
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
         />
-        <button
-          type="button"
-          style={{ fontSize: "1.5rem", lineHeight: 1, padding: "0.25rem 0.75rem" }}
-          onClick={() => setAmount(String(Number(amount || 0) + 1))}
-        >
-          +
-        </button>
-        <button
-          type="button"
-          style={{ fontSize: "1.5rem", lineHeight: 1, padding: "0.25rem 0.75rem" }}
-          onClick={() => setAmount(String(Number(amount || 0) - 1))}
-        >
-          −
-        </button>
+        <span style={{ position: "relative", display: "inline-block" }}>
+          <button
+            type="button"
+            style={{ fontSize: "1.5rem", lineHeight: 1, padding: "0.25rem 0.75rem" }}
+            onClick={() => {
+              setAmount(String(Number(amount || 0) + 1));
+              setBurstKey((k) => k + 1);
+            }}
+          >
+            +
+          </button>
+          {burstKey > 0 && (
+            <span key={burstKey} className="star-burst" aria-hidden="true">
+              ⭐
+            </span>
+          )}
+        </span>
+        <span style={{ position: "relative", display: "inline-block" }}>
+          <button
+            type="button"
+            style={{ fontSize: "1.5rem", lineHeight: 1, padding: "0.25rem 0.75rem" }}
+            onClick={() => {
+              setAmount(String(Number(amount || 0) - 1));
+              setFallKey((k) => k + 1);
+            }}
+          >
+            −
+          </button>
+          {fallKey > 0 && (
+            <span key={fallKey} className="star-fall" aria-hidden="true">
+              ⭐
+            </span>
+          )}
+        </span>
       </label>
       <label>
         Reason (optional)

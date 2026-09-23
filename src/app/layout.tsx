@@ -11,6 +11,9 @@ const fredoka = Fredoka({
 export const metadata: Metadata = {
   title: "Star Sticker",
   description: "Give and take away star stickers as rewards and consequences.",
+  icons: {
+    icon: { url: "/icon.gif", type: "image/gif" },
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
