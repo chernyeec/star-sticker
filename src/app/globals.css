@@ -1,39 +1,49 @@
 :root {
-  --bg: #80e5f7;
+  --bg: #a9e6da;
   --card: #ffffff;
   --ink: #23303a;
   --ink-soft: #6e828c;
-  --accent: #eb505e;
-  --accent-dark: #c13946;
-  --accent-soft: #fbdbde;
+  --accent: #3a56b0;
+  --accent-dark: #2c4090;
+  --accent-soft: #dbe2f7;
+  --heading: #8b6fd6;
+  --heading-soft: #e3daf7;
+  --select: #d6467e;
+  --select-dark: #b02f63;
+  --select-soft: #f8cfe0;
   --danger: #d97a45;
   --danger-bg: #fdeee4;
   --danger-border: #f7c4a7;
-  --pastel-1: #fff3b0;
-  --pastel-2: #c7e3f2;
+  --pastel-1: #ffe6a0;
+  --pastel-2: #bdeae2;
   --pastel-3: #fbe0d0;
   --pastel-4: #fbd3d8;
-  --surface: #f5fbfd;
-  --border: #d3e9f0;
+  --surface: #f2faf7;
+  --border: #cdeae0;
 }
 
 :root[data-theme="dark"] {
-  --bg: #0e1a22;
+  --bg: #10221e;
   --card: #17262f;
   --ink: #eaf6fa;
   --ink-soft: #9fb6c0;
-  --accent: #f16b77;
-  --accent-dark: #f79ca4;
-  --accent-soft: #4a2024;
+  --accent: #8ba0e8;
+  --accent-dark: #aebcf0;
+  --accent-soft: #232c52;
+  --heading: #a98ce8;
+  --heading-soft: #362a52;
+  --select: #ee6fa0;
+  --select-dark: #f696bd;
+  --select-soft: #4a2038;
   --danger: #e08a4f;
   --danger-bg: #3a2a1c;
   --danger-border: #6b4a2e;
   --pastel-1: #4a4020;
-  --pastel-2: #1e3a4a;
+  --pastel-2: #1e3a34;
   --pastel-3: #4a3324;
   --pastel-4: #4a2028;
-  --surface: #14232b;
-  --border: #274050;
+  --surface: #13251f;
+  --border: #244539;
 }
 
 html {
@@ -93,10 +103,10 @@ h1 {
 
 h2 {
   font-size: 1.3rem;
-  color: var(--accent);
+  color: var(--heading);
   margin: 2rem 0 0.75rem;
   padding-bottom: 0.35rem;
-  border-bottom: 3px solid var(--accent-soft);
+  border-bottom: 3px solid var(--heading-soft);
 }
 
 h3 {
@@ -242,10 +252,10 @@ button:disabled {
 }
 
 .kid-pick[aria-pressed="true"] {
-  background: var(--accent);
+  background: var(--select);
   color: #fff;
-  border-color: var(--accent-dark);
-  box-shadow: 0 3px 10px rgba(217, 130, 31, 0.35), 0 0 0 3px var(--accent-soft);
+  border-color: var(--select-dark);
+  box-shadow: 0 3px 10px rgba(31, 110, 103, 0.35), 0 0 0 3px var(--select-soft);
   opacity: 1;
   transform: scale(1.06);
 }
