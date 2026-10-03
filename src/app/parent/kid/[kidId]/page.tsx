@@ -103,7 +103,8 @@ export default async function KidRewardsView({
           <ul>
             {redemptions.map((r) => (
               <li key={r.id}>
-                {r.rewardNameSnapshot} ({r.rewardCostSnapshot} ⭐) — {STATUS_LABEL[r.status]}
+                {r.requestedAt.toLocaleDateString()} — {r.rewardNameSnapshot} ({r.rewardCostSnapshot} ⭐)
+                {r.status !== "approved" && ` — ${STATUS_LABEL[r.status]}`}
                 {r.status === "rejected" && r.rejectReason ? ` — ${r.rejectReason}` : ""}
               </li>
             ))}
@@ -128,10 +129,9 @@ export default async function KidRewardsView({
           <ul>
             {history.map((entry) => (
               <li key={entry.id}>
+                {entry.createdAt.toLocaleDateString()} —{" "}
                 {entry.amount > 0 ? `+${entry.amount}` : entry.amount}
                 {entry.reason ? ` — ${entry.reason}` : ""}
-                {" · "}
-                {entry.createdAt.toLocaleDateString()}
               </li>
             ))}
           </ul>

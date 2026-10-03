@@ -7,10 +7,9 @@ import { listActiveRewards } from "@/actions/rewards";
 import { listPendingRedemptions } from "@/actions/redemptions";
 import { listAllKidBalances } from "@/actions/stars";
 import LogoutButton from "../LogoutButton";
-import AwardStarsForm from "./AwardStarsForm";
+import KidStarCard from "./KidStarCard";
 import RedeemForKidForm from "./RedeemForKidForm";
 import PendingRedemptions from "./PendingRedemptions";
-import PersonLabel from "../PersonLabel";
 import { getKidPhoto } from "@/lib/kidPhotos";
 
 export const dynamic = "force-dynamic";
@@ -48,13 +47,10 @@ export default async function ParentDashboard() {
       <ul className="kid-grid">
         {kids.map((kid, i) => (
           <li key={kid.id}>
-            <Link href={`/parent/kid/${kid.id}`}>
-              <PersonLabel name={kid.name} avatar={kid.avatar} size={96} /> {balances[i]} ⭐
-            </Link>
+            <KidStarCard kid={kid} balance={balances[i]} />
           </li>
         ))}
       </ul>
-      <AwardStarsForm kids={kids} />
       <RedeemForKidForm kids={kids} rewards={rewards} />
       <PendingRedemptions redemptions={pendingRedemptions} kids={kids} />
       <p>

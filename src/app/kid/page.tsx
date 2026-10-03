@@ -67,10 +67,9 @@ export default async function KidView({
           <ul>
             {history.map((entry) => (
               <li key={entry.id}>
+                {entry.createdAt.toLocaleDateString()} —{" "}
                 {entry.amount > 0 ? `+${entry.amount}` : entry.amount}
                 {entry.reason ? ` — ${entry.reason}` : ""}
-                {" · "}
-                {entry.createdAt.toLocaleDateString()}
               </li>
             ))}
           </ul>

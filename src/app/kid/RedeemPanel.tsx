@@ -60,7 +60,8 @@ export default function RedeemPanel({
           <ul>
             {redemptions.map((r) => (
               <li key={r.id}>
-                {r.rewardNameSnapshot} ({r.rewardCostSnapshot} ⭐) — {STATUS_LABEL[r.status]}
+                <span suppressHydrationWarning>{r.requestedAt.toLocaleDateString()}</span> — {r.rewardNameSnapshot} ({r.rewardCostSnapshot} ⭐)
+                {r.status !== "approved" && ` — ${STATUS_LABEL[r.status]}`}
                 {r.status === "rejected" && r.rejectReason ? ` — ${r.rejectReason}` : ""}
                 {r.status === "pending" && (
                   <button type="button" disabled={pendingId === r.id} onClick={() => handleCancel(r.id)}>
